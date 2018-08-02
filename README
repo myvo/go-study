@@ -1,0 +1,243 @@
+Default variable:
+  var i int // 0
+  var a, b, c bool // false
+  i int
+
+Assign value:
+  // Short define variable with starting value
+  a := 1
+  b := a + 1
+
+  // Standard style for define variable
+  var x string
+  x = "Hello world"
+  // or
+  var x string = "Hello World"
+  var x = "Hello World"
+
+  // Define multiple vars
+  var (
+    a = 5
+    b = 10
+    c = 15
+  )
+
+  // Error: syntax error: unexpected string at end of statement
+  x string
+  x = "Hello world"
+
+  // Error: undefined: x
+  x = "Hello World"
+
+** Define function with pararam input and return
+  func swap(x, y int) int {}
+  func swap(x, y string) (string, string) {}
+  func swap(x, y string) (z string) {}
+  func slip(x, y int) (a, b int) {} // a, b is defined in the top of function, and return nothing.
+
+for
+  // using as while, for
+  for i <= 10 {}
+
+  for i; i <= 10; i++ {}
+
+  for key, value := range anArray {}
+
+  // _ means not use _ variable in for scope.
+  for _, value := range anArray {}
+
+  // like while
+  for true {}
+
+if // the same other languages
+switch ... case // without break at end of case.
+
+** Arrays
+  var x [5]int
+  x[0] = 1
+  ....
+
+  x := [5]int{1,2,3,4,5};
+
+  x := [5]int{
+    1,
+    2,
+    3,
+    4,
+    5, // the comma is required.
+  };
+
+Slices // A slice is a segment of an array. Like arrays slices are indexable and have a length. Unlike arrays this length is allowed to change. 
+  var x []int // create a slices with length is 0
+
+  // create a slice with length is 2
+  x := make([]int, 2)
+
+  // min length 5, max length 10
+  x := make([]float64, 5, 10)
+
+  x := []int{1,2,3,4,5};
+
+  // Get list value of x from 0 to 3
+  a := x[0:3];
+
+Slice Functions: append, copy
+  slice1 := []int{1,2,3}
+  slice2 := append(slice1, 4, 5)
+  fmt.Println(slice1, slice2) // [1 2 3] [1 2 3 4 5]
+
+  slice1 := []int{1,2,3}
+  slice2 := make([]int, 2)
+  copy(slice2, slice1)
+  fmt.Println(slice1, slice2) // [1 2 3] [1 2]
+
+  // Error: first argument to append must be slice; have [3]int
+  slice1 := [3]int{1,2,3}
+  slice2 := append(slice1, 4, 5) // Error here
+
+Maps: A map is an unordered collection of key-value pairs.
+  // Not initialize, can not use.
+  var x map[string]int
+
+  x := make(map[string]int)
+  x["key"] = 10
+  fmt.Println(x["key"], len(x)) // 10 1
+
+  // Get length of map
+  len(x)
+
+  // Delete an item in map
+  delete(x, "key");
+
+  // get element not in map.
+  fmt.Println(x["unknow"]) // 0
+
+  // Check element in map.
+  if name, ok := x["key"]; ok {
+    fmt.Println(name, ok)
+  }
+
+  // Short initilize map
+  elements := map[string]string{
+    "H":  "Hydrogen",
+    "He": "Helium",
+  }
+
+  // Map in map
+  elements := map[string]map[string]string{
+    "H": map[string]string{
+      "name":"Hydrogen",
+      "state":"gas",
+    },
+    "He": map[string]string{
+      "name":"Helium",
+      "state":"gas",
+    },
+  }
+
+** Functions
+  // params type and output type
+  func sum(a int, b int) int { return a + b}
+
+  // return multiple value
+  func sum(a int, b int) (int, int) { return (a + b), (a - b)}
+  // get results
+  x, y := sum(1, 2);
+
+  // Variadic Functions: dynamic input
+  func add(args ...int) int {}
+  fmt.Println(add(1,2,3))
+
+  // Closure
+  func main() {
+    add := func(x, y int) int {
+      return x + y
+    }
+    fmt.Println(add(1,1))
+  }
+  // return a function.
+  func makeEvenGenerator() func() uint {
+    i := uint(0)
+    return func() (ret uint) {
+      ret = i
+      i += 2
+      return
+    }
+  }
+  nextEven := makeEvenGenerator()
+  fmt.Println(nextEven()) // 0
+  fmt.Println(nextEven()) // 2
+  fmt.Println(nextEven()) // 4
+
+  // Recursion
+  func factorial(x uint) uint {
+    if x == 0 {
+      return 1
+    }
+    return x * factorial(x-1)
+  }
+
+Defer, Panic & Recover
+  // make sure after complete function, do the other function begining with "defer" keyword
+  f, _ := os.Open(filename)
+  defer f.Close() // must close file after Open, but when we've done to use file.
+
+** Pointers
+  func zero(xPtr *int) {
+    *xPtr = 0
+  }
+  zero(&x);
+  // Or
+  x := new(int); // create a pointer
+  zero(x);
+
+** Structs and Interfaces
+Structs
+  type Circle struct {
+    x float64
+    y float64
+    r float64
+  }
+
+  type Circle struct {
+    x, y, r float64
+  }
+
+  ** Initialization
+  var c Circle
+  // Or
+  c := new(Circle)
+  // Or
+  c := Circle{x: 0, y: 0, r: 5}
+  // Or
+  c := Circle{0, 0, 5}
+
+  // Access fields
+  fmt.Println(c.x, c.y, c.r)
+  c.x = 10
+  c.y = 5
+
+  ** Method
+  func (c Circle) area() float64 {
+    return math.Pi * c.r*c.r
+  }
+  c.area();
+
+  ** Embedded type
+  type Person struct {
+    Name string
+  }
+  func (p *Person) Talk() {
+    fmt.Println("Hi, my name is", p.Name)
+  }
+  type Android struct {
+    Person // embedded Person into Android. That means Android is Person
+    Model string
+  }
+  a := new(Android)
+  a.Talk();
+
+  ** Interfaces
+  type Shape interface {
+    area() float64
+  }
