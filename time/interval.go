@@ -7,10 +7,8 @@ func main() {
 	// Interval in every 1 second.
 	tickChan := time.NewTicker(time.Second * 1).C
 
-	for {
-		<-tickChan
-		for t := range tickChan {
-			fmt.Println("Tick at", t)
-		}
+	<-tickChan
+	for t := range tickChan {
+		fmt.Println("Tick at", t)
 	}
 }
